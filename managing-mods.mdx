@@ -1,0 +1,110 @@
+---
+title: 'Install, Enable, and Delete Mods in Victor Launcher'
+description: 'Install, enable, disable, and delete BepInEx DLL mods in Among Us using the Victor Launcher in-game overlay — no manual file management required.'
+---
+
+Managing mods in Victor Launcher means installing, toggling, and removing `.dll` files through an in-game overlay instead of manually moving files on disk. You open the overlay with **F7**, make your changes, and restart Among Us when prompted — the launcher handles all file operations for you.
+
+## Installing a mod
+
+<Steps>
+  <Step title="Open Victor Launcher">
+    Press **F7** anywhere in Among Us to open the overlay. The main panel shows your installed mod counts and the staged ("Ready To Install") count.
+  </Step>
+
+  <Step title="Click Pick DLL">
+    Click the **Pick DLL** button to open the Windows file picker dialog. Navigate to the `.dll` file you want to install and select it.
+
+    <Info>
+      The file picker is Windows-native. Only `.dll` files are accepted — selecting any other file type has no effect.
+    </Info>
+  </Step>
+
+  <Step title="Confirm the DLL is queued">
+    After selection, the DLL is copied into `BepInEx/mod-imports/` and appears under the "Queued Folders" section of the overlay as a staged mod with a **Ready** status pill.
+  </Step>
+
+  <Step title="Click Install Folder">
+    Locate the queued entry in "Queued Folders" and click **Install Folder**. Victor Launcher moves the DLL from `mod-imports/` into `BepInEx/plugins/`, backing up any existing file with the same name first.
+  </Step>
+
+  <Step title="Restart Among Us">
+    A restart prompt appears after installation. Click **Close Now** to quit the game and apply the change, or click **Later** to keep playing and restart at your convenience.
+
+    <Warning>
+      The mod does not load until you restart Among Us. Your mod list on disk will differ from what is currently running in memory if you skip the restart.
+    </Warning>
+  </Step>
+</Steps>
+
+## Enabling and disabling mods
+
+The "Installed Folders" section of the overlay shows every mod group found in `BepInEx/plugins/` and `BepInEx/plugins-disabled/`. Each group appears as a card with a count of its DLLs and how many are currently enabled or disabled.
+
+To act on an entire group at once, use the **Enable All** or **Disable All** buttons on the group card. To act on individual DLLs:
+
+1. Click **Open Folder** on any group card to drill into the group detail view.
+2. Each DLL is listed with a status pill — **Enabled** or **Disabled** — and a corresponding action button.
+3. Click **Enable** to move the DLL from `BepInEx/plugins-disabled/` into `BepInEx/plugins/`.
+4. Click **Disable** to move the DLL from `BepInEx/plugins/` into `BepInEx/plugins-disabled/`.
+
+<Note>
+  Victor Launcher cannot disable itself while Among Us is running. The **Disable** button is grayed out for its own DLL as a safety measure.
+</Note>
+
+After enabling or disabling a mod, the overlay shows a restart prompt. The change takes effect the next time you launch Among Us.
+
+## Deleting a mod
+
+Victor Launcher only lets you permanently delete mods that are already disabled. This prevents accidentally removing a mod that is actively loaded.
+
+1. In "Installed Folders", click **Open Folder** on the group that contains the mod.
+2. Find the DLL with a **Disabled** status pill.
+3. Click the **Delete** button next to it.
+
+<Warning>
+  Deletion is permanent. The file is removed from `BepInEx/plugins-disabled/` immediately and cannot be recovered through the launcher. If you want to keep a copy, back it up manually before deleting.
+</Warning>
+
+## Backup system
+
+Before Victor Launcher overwrites any DLL — during installation or when enabling a mod that replaces an existing file — it automatically copies the old version to `BepInEx/victor-backups/<timestamp>/`. This protects you from accidentally losing a working version when updating a mod.
+
+Backups are not managed or cleaned up by the launcher. If the `victor-backups/` folder grows large over time, you can open it in File Explorer and delete old timestamped folders manually.
+
+## Groups
+
+Victor Launcher organizes DLLs into groups based on their location in the file system:
+
+- DLLs inside a **subfolder** of `BepInEx/plugins/` (e.g., `plugins/MyMod/`) form a group named after that subfolder (`MyMod`).
+- DLLs placed **directly** in `BepInEx/plugins/` (with no subfolder) appear under the **Loose DLLs** group.
+- When you download a room pack, its DLLs are staged in `BepInEx/mod-imports/<ROOMCODE>/` and then installed as a group named after the room code.
+
+<CardGroup cols={2}>
+  <Card title="Enable All / Disable All" icon="toggle-on">
+    The group card buttons act on every DLL in that group at once, moving the whole subfolder between `plugins/` and `plugins-disabled/`.
+  </Card>
+  <Card title="Open Folder" icon="folder-open">
+    Drills into a group to show individual DLL status and per-file Enable, Disable, and Delete controls.
+  </Card>
+</CardGroup>
+
+## Frequently asked questions
+
+<AccordionGroup>
+  <Accordion title="Why is the Disable button grayed out?">
+    Victor Launcher protects itself from being disabled while Among Us is running. If the grayed-out DLL is `AmongUsPlugin.dll` (or whichever file Victor Launcher is loaded from), this is expected behavior. To remove or disable Victor Launcher itself, close Among Us first and move the file manually.
+  </Accordion>
+
+  <Accordion title="My mod isn't in the Installed Folders list">
+    Click the **Refresh Lists** button in the overlay to re-scan all directories. If the mod still does not appear, confirm that:
+    - The file has a `.dll` extension.
+    - It is located inside `BepInEx/plugins/` or `BepInEx/plugins-disabled/` — not in a different directory.
+
+    Files in other locations are not tracked by Victor Launcher.
+  </Accordion>
+
+  <Accordion title="How do I move a mod from one group to another?">
+    The launcher does not support moving files between groups directly. To reorganize, close Among Us first, then move the `.dll` file to the desired subfolder inside `BepInEx/plugins/` or `BepInEx/plugins-disabled/` using File Explorer. When you reopen the game and press **F7**, the mod will appear in the correct group.
+  </Accordion>
+</AccordionGroup>

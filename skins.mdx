@@ -1,0 +1,65 @@
+---
+title: 'Customizing the Victor Launcher Overlay with VSK Skins'
+description: 'Install .vsk skin files to change the colors, header, and button styles of the Victor Launcher overlay — supported since version 0.2.3.'
+---
+
+Victor Launcher supports `.vsk` skin files that let you change the visual appearance of the in-game overlay. Skins are available in version 0.2.3 and newer. Installing one takes less than a minute: drop the file into your plugins folder and restart the game.
+
+## What skins customize
+
+A `.vsk` skin file can change the following parts of the overlay:
+
+- **Header** — the appearance of the top bar of the overlay panel.
+- **Button colors** — normal, hover, and active (pressed) states for each button color variant: blue, purple, red, green, and slate.
+- **Primary color** — the main accent color used throughout the overlay.
+- **Secondary color** — the supporting accent color for secondary UI elements.
+
+Everything else about the overlay's layout and behavior remains the same regardless of which skin is active.
+
+## Installing a skin
+
+<Steps>
+  <Step title="Obtain a .vsk file">
+    Download a `.vsk` skin file from the community or start from the sample skin included in the [Victor Launcher 0.2.3 release](https://github.com/AteasVictor/Victor-Launcher/releases/tag/v0.2.3) on GitHub.
+
+    <Tip>
+      The sample `.vsk` included in the 0.2.3 release is the best starting point for creating your own skin. It contains all supported fields with default values, so you can edit only what you want to change.
+    </Tip>
+  </Step>
+
+  <Step title="Place the file in BepInEx/plugins/">
+    Copy the `.vsk` file into `BepInEx/plugins/` — the same folder where `AmongUsPlugin.dll` lives. Do not place it in a subfolder.
+
+    ```text
+    <Among Us folder>\BepInEx\plugins\YourSkin.vsk
+    ```
+
+    Victor Launcher scans this folder automatically on startup; no additional configuration is needed.
+  </Step>
+
+  <Step title="Restart Among Us">
+    Close Among Us completely and relaunch it. BepInEx will load Victor Launcher, which picks up the `.vsk` file during initialization.
+  </Step>
+
+  <Step title="Open the overlay to confirm">
+    Press **F7** to open the overlay. The skin is applied automatically — you should see the custom colors and header style reflected immediately.
+
+    <Warning>
+      If the overlay looks wrong after adding a skin — missing colors, garbled layout, or a plain default appearance — the `.vsk` file may be malformed or incompatible. Remove the file from `BepInEx/plugins/` and restart Among Us to restore the default look.
+    </Warning>
+  </Step>
+</Steps>
+
+<Note>
+  Victor Launcher reads only one skin file at a time. If multiple `.vsk` files are present in `BepInEx/plugins/`, the behavior is undefined — one file may be picked arbitrarily, or neither may load correctly. Keep only one `.vsk` file in the folder at a time.
+</Note>
+
+## Getting a sample skin
+
+The official sample skin is bundled with the 0.2.3 release of Victor Launcher on GitHub. To find it:
+
+1. Go to the [Victor Launcher Releases page](https://github.com/AteasVictor/Victor-Launcher/releases) on GitHub.
+2. Open the **v0.2.3** release (or any later release that includes a skin asset).
+3. Download the sample `.vsk` file from the release assets.
+
+The sample skin uses the same default values as the built-in style, so the overlay will look identical to the unskinned version until you start editing fields. Open it in any text editor to see the available properties and their current values.

@@ -1,0 +1,61 @@
+---
+title: 'Victor Launcher — In-Game Mod Manager for Among Us'
+description: 'Learn what Victor Launcher is, how its three-folder system works, and what problems it solves for BepInEx mod management in Among Us.'
+---
+
+Victor Launcher is an in-game mod manager for Among Us that runs on top of BepInEx. Instead of manually dragging DLL files in and out of folders between play sessions, you manage everything through an overlay you open with **F7** — without ever leaving the game. It also lets you share mod collections with other players using a short room code.
+
+## Key features
+
+<CardGroup cols={2}>
+  <Card title="Install mods" icon="download" href="/installation">
+    Pick any BepInEx-compatible DLL from a file dialog and queue it for installation without touching the file system manually.
+  </Card>
+  <Card title="Manage installed mods" icon="sliders" href="/managing-mods">
+    Enable, disable, or delete individual mods or entire grouped folders from one place inside the game.
+  </Card>
+  <Card title="Share mod packs" icon="share-nodes" href="/shared-packs">
+    Generate a room code for your current mod set and let other players download and queue the same mods instantly.
+  </Card>
+  <Card title="Overlay skins" icon="palette" href="/skins">
+    Customize the launcher overlay's colors, header, and button styles with .vsk skin files.
+  </Card>
+  <Card title="Configuration" icon="gear" href="/configuration">
+    Adjust Victor Launcher's own settings, including Supabase connection options, through the BepInEx config file.
+  </Card>
+  <Card title="Troubleshooting" icon="triangle-exclamation" href="/troubleshooting">
+    Diagnose common problems using the built-in status bar and BepInEx log output.
+  </Card>
+</CardGroup>
+
+## How it works
+
+When Among Us loads, Victor Launcher registers itself as a BepInEx plugin and attaches to the game's HUD. Pressing **F7** anywhere in the game toggles the overlay open or closed.
+
+### The three-folder system
+
+Victor Launcher watches three directories inside your BepInEx installation:
+
+| Folder | Purpose |
+|---|---|
+| `BepInEx/plugins/` | Active mods that load on the next game start |
+| `BepInEx/plugins-disabled/` | Mods that are installed but not currently active |
+| `BepInEx/mod-imports/` | DLLs queued for installation, shown as "Ready To Install" |
+
+When you install a mod, Victor Launcher moves the DLL from `mod-imports/` into `plugins/`. When you disable a mod, it moves from `plugins/` to `plugins-disabled/`. No files are ever deleted unless you explicitly choose **Delete**.
+
+### The restart-to-apply model
+
+BepInEx loads plugins once at game startup. This means any change that affects which mods are loaded — installing, enabling, or disabling — requires you to restart Among Us before it takes effect. Victor Launcher shows a restart prompt after every such action, and you can choose to restart immediately with **Close Now** or continue playing and restart later.
+
+The status bar at the bottom of the overlay always shows **Ship Status: Ready** when everything is consistent, or **Ship Status: Warning** when something needs your attention.
+
+## Limitations and scope
+
+Victor Launcher is designed specifically for BepInEx DLL mods on Windows. Keep the following in mind:
+
+- **DLL mods only.** Victor Launcher accepts `.dll` files. It is not designed for asset bundles, config-only mods, or non-BepInEx modifications.
+- **File picker is Windows-native.** The **Pick DLL** dialog uses the Windows file picker and does not support other platforms.
+- **Changes require a restart.** Because BepInEx resolves plugins at startup, you must relaunch Among Us after any install, enable, or disable action for changes to take effect.
+- **Victor Launcher cannot disable itself.** The mod manager is itself a BepInEx plugin, so it cannot remove or disable its own DLL while the game is running.
+- **Not for bypassing game restrictions.** Victor Launcher is a file management utility. It does not alter trust checks, bypass anti-cheat systems, or grant access to restricted game features.

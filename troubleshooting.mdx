@@ -1,0 +1,131 @@
+---
+title: 'Troubleshooting Victor Launcher: Fix Common Issues'
+description: 'Diagnose overlay, mod management, and room download problems in Victor Launcher using the Ship Status bar, BepInEx log output, and this reference guide.'
+---
+
+When something goes wrong, your two best sources of information are the **Ship Status** bar at the bottom of the Victor Launcher overlay and the BepInEx log file at `BepInEx/LogOutput.log`. The overlay shows a plain-language status message after every operation. The log file contains detailed output for every action Victor Launcher takes, all prefixed with `Victor Launcher` so you can filter quickly.
+
+## Overlay and startup issues
+
+<AccordionGroup>
+  <Accordion title="The F7 key does nothing">
+    If pressing **F7** in Among Us produces no response, the plugin is likely not loaded. Check the following:
+
+    1. Confirm that `BepInEx/plugins/AmongUsPlugin.dll` exists. If the file is missing, reinstall Victor Launcher by following the [installation guide](/installation).
+    2. Open `BepInEx/LogOutput.log` and search for `Victor Launcher`. If there are no matching lines, BepInEx did not load the plugin at all.
+    3. If you see an error in the log at startup, it typically points to a BepInEx version mismatch or a missing dependency. Reinstall BepInEx using the version specified in the installation guide.
+
+    <Warning>
+      BepInEx must be installed before Victor Launcher. If `BepInEx/` does not exist at the root of your Among Us folder, BepInEx itself is missing.
+    </Warning>
+  </Accordion>
+
+  <Accordion title="The overlay opens but is completely blank">
+    A blank overlay usually means a skin file is interfering with the UI. Remove any `.vsk` files from `BepInEx/plugins/` and any subfolders, then restart Among Us. If the overlay renders correctly after removing the skin files, reintroduce them one at a time to identify the problematic file.
+  </Accordion>
+
+  <Accordion title="Victor Launcher says it failed to attach the mod manager UI">
+    This error appears in the Ship Status bar when the overlay could not hook into Among Us's HUD. It is usually caused by an IL2CPP interop failure.
+
+    1. Open `BepInEx/LogOutput.log` and look for exception messages near the startup entries for `Victor Launcher`.
+    2. If you see `Il2CppInterop` or `Unhollower` errors, try reinstalling BepInEx completely — delete the `BepInEx/` folder, reinstall BepInEx, then reinstall Victor Launcher.
+    3. Make sure your Among Us version matches the version supported by your BepInEx build.
+  </Accordion>
+</AccordionGroup>
+
+## Mod management issues
+
+<AccordionGroup>
+  <Accordion title="Pick DLL opens nothing or shows a file picker error">
+    The Windows file dialog is only available on Windows. If you see the error `"The file picker is only available on the Windows game machine."`, you are running Among Us on a non-Windows platform (Linux, macOS, or a Steam Deck).
+
+    As a workaround, copy your `.dll` files directly into `BepInEx/mod-imports/` using your file manager, then click **Refresh Lists** in the overlay. The DLLs will appear in the "Queued Folders" section and can be installed normally.
+  </Accordion>
+
+  <Accordion title="My mod doesn't appear in Installed Folders after installing">
+    1. Click **Refresh Lists** in the overlay to re-scan the plugin directories.
+    2. Verify the DLL is present in `BepInEx/plugins/` or one of its subfolders using File Explorer.
+    3. Check the Ship Status bar for an error message — if the install failed, the reason is displayed there.
+    4. Confirm the file has a `.dll` extension. Victor Launcher ignores files with any other extension.
+  </Accordion>
+
+  <Accordion title="I can't disable a mod">
+    Victor Launcher cannot disable itself while Among Us is running. If the **Disable** button is grayed out for `AmongUsPlugin.dll` (or whatever file Victor Launcher is loaded from), this is expected. To remove or disable Victor Launcher itself, close Among Us first and move the file manually.
+
+    For all other mods, verify the DLL appears in the "Installed Folders" list with an **Enabled** status pill. If the DLL is missing from the list, click **Refresh Lists** first.
+  </Accordion>
+
+  <Accordion title="Disabled mods still load after restarting">
+    BepInEx loads every DLL it finds in `BepInEx/plugins/`. If a mod loads after you disabled it, the file may still be in both directories.
+
+    1. Open `BepInEx/plugins/` and `BepInEx/plugins-disabled/` in File Explorer.
+    2. Check whether the DLL appears in `plugins/` as well as `plugins-disabled/`. If it does, delete the copy in `plugins/` manually.
+    3. This duplication can happen if the DLL was copied into `plugins/` by another tool or manually after Victor Launcher moved it.
+  </Accordion>
+
+  <Accordion title="The Delete button is grayed out">
+    Victor Launcher only allows deletion of mods that are already disabled. This prevents accidentally removing a mod that is currently loaded. Disable the mod first using the **Disable** button, then click **Delete**.
+
+    The error `"Only disabled DLLs can be deleted from here."` confirms this is the reason.
+  </Accordion>
+</AccordionGroup>
+
+## Download and room code issues
+
+<AccordionGroup>
+  <Accordion title="'Could not find that room code'">
+    This error means the server returned a 404 for the code you entered. Try the following:
+
+    - Double-check the spelling. Room codes are case-insensitive — Victor Launcher automatically uppercases your input — but the characters must otherwise match exactly.
+    - Confirm the host has published the room pack (not just saved it as a draft).
+    - Ask the host to re-publish the room if it was recently updated. A re-publish generates a fresh manifest and can resolve lookup failures.
+  </Accordion>
+
+  <Accordion title="'The room manifest has expired. Try again in a moment.'">
+    Room manifests have a short validity window (issued within the last 10 minutes, not expired more than 1 minute ago). Wait a few seconds and click **Download Pack** again. The manifest refreshes automatically on the server. If the error repeats persistently, ask the host to open the room manager and re-save the pack to generate a new manifest.
+  </Accordion>
+
+  <Accordion title="'Hash check failed for &lt;file&gt;.'">
+    The downloaded DLL's SHA-256 hash does not match the value recorded in the signed manifest. This usually means a file on the server was replaced or corrupted after the manifest was signed.
+
+    Ask the host to re-upload the affected DLL and re-publish the room pack. Do not use the partially downloaded files — they may be incomplete or tampered with.
+  </Accordion>
+
+  <Accordion title="'The room manifest signature could not be verified'">
+    Victor Launcher rejected the manifest because its cryptographic signature does not match the public key in your config. This is a security check — do not install mods from this room.
+
+    If you operate a self-hosted instance and recently rotated your signing keys, update `ManifestSigningPublicKeyPem` in `BepInEx/config/com.tate.amongus.starterplugin.cfg` to match the new public key.
+  </Accordion>
+
+  <Accordion title="'That room pack does not contain any files yet.'">
+    The room exists but no DLLs have been uploaded to it. Ask the host to upload mod files and re-publish the room pack before you try downloading again.
+  </Accordion>
+
+  <Accordion title="Room downloads fail immediately with a connection error">
+    If downloads fail before the launcher even contacts the server, `ProjectUrl` or `AnonKey` in the config file may be blank or set to an invalid value.
+
+    Delete `BepInEx/config/com.tate.amongus.starterplugin.cfg` and relaunch Among Us to restore the defaults. BepInEx regenerates the file with the correct bundled values on the next startup.
+  </Accordion>
+
+  <Accordion title="'The downloaded size for &lt;file&gt; did not match the manifest.'">
+    The file Victor Launcher received from the server is a different size than what the manifest declares. This can indicate a network interruption or a server-side change after the manifest was signed. Click **Download Pack** again to retry. If the error persists, ask the host to re-upload the file and re-publish the room.
+  </Accordion>
+</AccordionGroup>
+
+## General tips
+
+<AccordionGroup>
+  <Accordion title="Reading the BepInEx log">
+    `BepInEx/LogOutput.log` is written fresh every time Among Us starts. Search for `Victor Launcher` to filter to relevant entries. Errors are prefixed with `[Error]` and warnings with `[Warning]`. The log is the most reliable way to diagnose issues that do not produce a visible message in the overlay.
+  </Accordion>
+
+  <Accordion title="Finding backup files">
+    Before overwriting any DLL during installation, Victor Launcher saves the previous version to `BepInEx/victor-backups/`. If an update breaks a mod and you want to roll back, look in that folder for a timestamped copy of the original file. Restore it by copying it back into `BepInEx/plugins/` and restarting Among Us.
+
+    Victor Launcher does not clean up old backups automatically. If the folder grows large, open it in File Explorer and delete old timestamped subfolders manually.
+  </Accordion>
+
+  <Accordion title="Resetting to defaults">
+    To restore all Victor Launcher configuration to factory defaults, delete `BepInEx/config/com.tate.amongus.starterplugin.cfg`. BepInEx regenerates the file with bundled default values the next time Among Us launches. Your installed mods and the state file are not affected.
+  </Accordion>
+</AccordionGroup>

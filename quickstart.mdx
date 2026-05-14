@@ -1,81 +1,73 @@
 ---
-title: "Quickstart"
-description: "Start building awesome documentation in minutes"
-icon: 'rocket'
+title: 'Quickstart: Install Your First Mod with Victor Launcher'
+description: 'Go from a fresh Victor Launcher install to a running mod in six steps — open the overlay, pick a DLL, queue it, install it, and restart Among Us.'
 ---
 
-## Get started in three steps
-
-Get your documentation site running locally and make your first customization.
-
-### Step 1: Set up your local environment
-
-<AccordionGroup>
-  <Accordion icon="copy" title="Clone your docs locally">
-    During the onboarding process, you created a GitHub repository with your docs content if you didn't already have one. You can find a link to this repository in your [dashboard](https://dashboard.mintlify.com).
-    
-    To clone the repository locally so that you can make and preview changes to your docs, follow the [Cloning a repository](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) guide in the GitHub docs.
-  </Accordion>
-  <Accordion icon="rectangle-terminal" title="Start the preview server">
-    1. Install the Mintlify CLI: `npm i -g mint`
-    2. Navigate to your docs directory and run: `mint dev`
-    3. Open `http://localhost:3000` to see your docs live!
-    
-    <Tip>Your preview updates automatically as you edit files.</Tip>
-  </Accordion>
-</AccordionGroup>
-
-### Step 2: Deploy your changes
-
-<AccordionGroup>
-  <Accordion icon="github" title="Install our GitHub app">
-    Install the Mintlify GitHub app from your [dashboard](https://dashboard.mintlify.com/settings/organization/github-app).
-    
-    Our GitHub app automatically deploys your changes to your docs site, so you don't need to manage deployments yourself.
-</Accordion>
-<Accordion icon="palette" title="Update your site name and colors">
-    For a first change, let's update the name and colors of your docs site.
-
-    1. Open `docs.json` in your editor.
-    2. Change the `"name"` field to your project name.
-    3. Update the `"colors"` to match your brand.
-    4. Save and see your changes instantly at `http://localhost:3000`.
-
-    <Tip>Try changing the primary color to see an immediate difference!</Tip>
-  </Accordion>
-</AccordionGroup>
-
-### Step 3: Go live
-
-<Accordion icon="rocket" title="Publish your docs">
-  1. Commit and push your changes.
-  2. Your docs will update and be live in moments!
-</Accordion>
-
-## Next steps
-
-Now that you have your docs running, explore these key features:
-
-<CardGroup cols={2}>
-
-<Card title="Write Content" icon="pen-to-square" href="/essentials/markdown">
-  Learn MDX syntax and start writing your documentation.
-</Card>
-
-<Card title="Customize style" icon="palette" href="/essentials/settings">
-  Make your docs match your brand perfectly.
-</Card>
-
-<Card title="Add code examples" icon="square-code" href="/essentials/code">
-  Include syntax-highlighted code blocks.
-</Card>
-
-<Card title="API documentation" icon="code" href="/api-reference/introduction">
-  Auto-generate API docs from OpenAPI specs.
-</Card>
-
-</CardGroup>
+This guide walks you through installing your first mod using Victor Launcher. By the end, your mod will be active in Among Us and visible in the **Installed Folders** list. The whole process takes under two minutes once you have a compatible DLL ready.
 
 <Note>
-  **Need help?** See our [full documentation](https://mintlify.com/docs) or join our [community](https://mintlify.com/community).
+  Victor Launcher only accepts `.dll` files. Make sure the mod you want to install is a BepInEx-compatible DLL before continuing. Asset bundles, config files, and other file types are not supported.
 </Note>
+
+<Steps>
+  <Step title="Open the launcher overlay">
+    While in Among Us — the main menu is fine — press **F7**. The Victor Launcher overlay appears in the center of your screen.
+
+    At the top you will see the title "Victor Launcher" alongside two stat chips: **Installed** shows how many mod folders are currently active, and **Ready To Install** shows how many are queued. Action buttons — **Pick DLL**, **Refresh Lists**, and **Close Game** — appear in the top-right corner. The **Download By Code** section for room pack downloads appears further down in the overlay.
+
+    <Tip>
+      The status bar at the bottom of the overlay displays **Ship Status: Ready** when everything is consistent. If it shows **Ship Status: Warning**, read the message directly below it for details on what needs attention.
+    </Tip>
+  </Step>
+
+  <Step title="Pick your mod's DLL file">
+    Click **Pick DLL**. A Windows file picker dialog opens. Navigate to the `.dll` file for the mod you want to install, select it, and click **Open**.
+
+    Victor Launcher copies the file into `BepInEx/mod-imports/` and queues it for installation. The file picker closes automatically after you make a selection.
+  </Step>
+
+  <Step title="Confirm the mod is queued">
+    Look at the **Queued Folders** section of the overlay. Your mod's folder appears there with a status of **Ready**. This means the DLL is staged in `BepInEx/mod-imports/` and is waiting to be moved into `BepInEx/plugins/`.
+
+    If you queued multiple mods, they all appear here as separate entries. You can install them individually or all at once.
+  </Step>
+
+  <Step title="Install the mod">
+    To install all queued mods at once, click **Install Folder** next to the queued entry. If you want to review the contents of a folder before installing, open it and click **Install** on the individual files inside.
+
+    Victor Launcher moves the DLL from `BepInEx/mod-imports/` into `BepInEx/plugins/` and records the change in `BepInEx/config/victor-launcher-state.json`.
+  </Step>
+
+  <Step title="Respond to the restart prompt">
+    After installation completes, a restart prompt appears. You have two options:
+
+    - **Close Now** — Among Us closes immediately so you can relaunch with the new mod loaded.
+    - **Later** — The prompt dismisses and you continue in your current session. The mod will not be active until you manually restart the game.
+
+    Choose whichever fits your situation. Either way, the DLL is already in place — no further action is needed before restarting.
+  </Step>
+
+  <Step title="Restart Among Us and confirm the mod is active">
+    Launch Among Us. BepInEx loads all plugins in `BepInEx/plugins/` at startup, including your newly installed mod.
+
+    Once the game is running, press **F7** to open Victor Launcher again. Your mod now appears in the **Installed Folders** list with a status of **Enabled**. The **Installed** stat chip at the top increments to reflect the new total.
+
+    If the mod does not appear as expected, see the FAQ below.
+  </Step>
+</Steps>
+
+## Frequently asked questions
+
+<AccordionGroup>
+  <Accordion title="Why don't I see the overlay when I press F7?">
+    The most common cause is that BepInEx is not installed or is not loading correctly. Verify that a `BepInEx/` folder exists inside your Among Us directory and that it contains a `core/` subfolder with BepInEx's own DLLs. Then check the BepInEx log file at `BepInEx/LogOutput.log` — if Victor Launcher loaded successfully, you will see a line referencing `com.tate.amongus.starterplugin`. If that line is missing, BepInEx did not load the plugin, which usually means the DLL is in the wrong location or BepInEx itself is not set up correctly.
+  </Accordion>
+
+  <Accordion title="The mod isn't loading after I restarted Among Us">
+    Open the Victor Launcher overlay with **F7** and check the **Installed Folders** list. If your mod appears there with a status of **Enabled**, BepInEx should be loading it. If the status shows **Disabled**, click **Enable** and restart the game again. If the mod does not appear in the list at all, check `BepInEx/plugins/` directly to confirm the DLL file is present. A missing file indicates the installation step did not complete — go back to the **Queued Folders** section and try installing again.
+  </Accordion>
+
+  <Accordion title="I see Ship Status: Warning — what does that mean?">
+    **Ship Status: Warning** appears in the status bar at the bottom of the overlay when Victor Launcher detects an inconsistency or encounters an error during an operation. Read the status message displayed directly below the ship status indicator — it describes exactly what went wrong. Common causes include a file permission error preventing Victor Launcher from moving a DLL, or a mismatch between the recorded state and what is actually on disk. If the message is unclear, consult the [Troubleshooting](/troubleshooting) page for a full list of status messages and their resolutions.
+  </Accordion>
+</AccordionGroup>

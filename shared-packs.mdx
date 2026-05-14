@@ -1,0 +1,98 @@
+---
+title: 'Sharing Mod Packs via Room Codes in Victor Launcher'
+description: 'Publish a set of mods to the web as a room pack and let players download the entire collection in-game with a short alphanumeric room code.'
+---
+
+Victor Launcher lets a host publish a collection of mods to a web-hosted room, then share a short room code with players. Players enter that code inside the game overlay and download the entire mod pack in one step — no file transfers, no manual folder management. This is designed for custom lobbies where everyone needs the same set of mods loaded.
+
+## For hosts: publishing a room pack
+
+<Steps>
+  <Step title="Open the room manager website">
+    Visit the Victor Launcher room manager at [https://ateasvictor.github.io/Victor-Launcher/](https://ateasvictor.github.io/Victor-Launcher/) in any browser.
+  </Step>
+
+  <Step title="Create a room">
+    Click **Create Room** and fill in three fields:
+    - **Room name** — a human-readable label for your room.
+    - **Room code** — the short code players will type in-game (up to 12 characters, letters, numbers, hyphens, and underscores).
+    - **Password** — used to authenticate future edits to this room. Store it somewhere safe.
+
+    <Tip>
+      Pick a memorable room code — something like your lobby name, game initialism, or a short phrase. Players type this exactly, so shorter and simpler is better.
+    </Tip>
+  </Step>
+
+  <Step title="Upload your mod DLLs">
+    After creating the room, upload each `.dll` file you want to include in the pack. Each file is added to a draft of the room pack.
+  </Step>
+
+  <Step title="Publish the room pack">
+    Click **Save Room Pack** to sign and publish the manifest. The room is now live and accessible to anyone with the room code.
+
+    <Note>
+      Players only need the room code to download the pack. The password is only required when you want to update or delete the room later.
+    </Note>
+  </Step>
+
+  <Step title="Share the room code">
+    Send the room code to your players through Discord, in-game chat, or however you coordinate your lobby. Players will enter it directly in the Victor Launcher overlay.
+  </Step>
+</Steps>
+
+## For players: downloading a room pack
+
+<Steps>
+  <Step title="Open Victor Launcher">
+    Press **F7** anywhere in Among Us to open the overlay.
+  </Step>
+
+  <Step title="Find the Download By Code section">
+    Scroll or navigate to the "Download By Code" section inside the overlay.
+  </Step>
+
+  <Step title="Enter the room code">
+    Click the room code input field and type the code your host shared with you. Room codes are up to 12 characters and can include letters and numbers. The field automatically uppercases your input, so capitalization does not matter.
+  </Step>
+
+  <Step title="Download the pack">
+    Click **Download Pack** or press **Enter**. Victor Launcher contacts the room server, verifies the manifest, and downloads each mod DLL. The files are queued in `BepInEx/mod-imports/<ROOMCODE>/`.
+  </Step>
+
+  <Step title="Install the folder">
+    Once the download completes, the room pack appears in the "Queued Folders" section of the overlay. Click **Install Folder** on the room's entry to move all DLLs from `mod-imports/<ROOMCODE>/` into `BepInEx/plugins/<ROOMCODE>/`.
+  </Step>
+
+  <Step title="Restart Among Us">
+    A restart prompt appears after installation. Click **Close Now** to apply the changes, or **Later** to keep playing and restart when ready. The mods will not load until the game restarts.
+  </Step>
+</Steps>
+
+## Security
+
+Victor Launcher applies several layers of verification to every room pack download to protect you from tampered or malicious files:
+
+- **RSA/SHA-256 manifest signatures.** The room manifest is cryptographically signed. Victor Launcher verifies the signature before staging any files — if the signature does not match, the download is rejected.
+- **Host allowlist.** Downloads are only accepted from the configured Supabase project host. Files served from any other URL are rejected, regardless of their content.
+- **Per-file hash verification.** After each DLL is downloaded, its SHA-256 hash is checked against the value recorded in the signed manifest. A mismatch causes the entire download to fail.
+- **DLL-only filter.** Only `.dll` files are accepted. If the manifest references any other file type, the download is rejected before any file is written to disk.
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="I get 'Could not find that room code'">
+    Double-check the room code for typos — codes are case-insensitive but must otherwise match exactly. Ask your host to confirm the code and verify the room pack is published (not just saved as a draft). If the problem persists, ask the host to re-publish the room.
+  </Accordion>
+
+  <Accordion title="Download says 'The room manifest has expired'">
+    Room manifests have a limited validity window. Wait a moment and try downloading again — the manifest refreshes automatically on the server side. If the error repeats, ask your host to open the room manager and re-save the pack to generate a fresh manifest.
+  </Accordion>
+
+  <Accordion title="Hash check failed">
+    This error means the downloaded file's contents do not match the hash recorded in the signed manifest. This can happen if a file on the server was replaced or corrupted after the manifest was signed. Ask the host to re-upload the affected DLL and re-publish the room pack.
+  </Accordion>
+
+  <Accordion title="Only DLL files are supported">
+    The room pack contains a file that is not a `.dll`. Victor Launcher rejects non-DLL files as a security measure. Ask the host to remove the unsupported file from the room and re-publish before you try downloading again.
+  </Accordion>
+</AccordionGroup>

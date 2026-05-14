@@ -1,0 +1,78 @@
+---
+title: 'Configuring Victor Launcher: BepInEx Settings Guide'
+description: 'Edit the Victor Launcher BepInEx config file to adjust Supabase connection options, room codes, and manifest signing keys for your Among Us installation.'
+---
+
+Victor Launcher reads its settings from the standard BepInEx configuration file. Most players never need to open this file — the defaults connect directly to the public Victor Launcher room service. The only value you are likely to change from time to time is `RoomCode`, and even that is easier to set through the in-game input box than by editing a file.
+
+## Config file location
+
+All Victor Launcher settings live in a single file:
+
+```
+BepInEx/config/com.tate.amongus.starterplugin.cfg
+```
+
+This file is created automatically the first time Among Us launches with Victor Launcher installed. You can open it in any plain-text editor (Notepad, VS Code, etc.).
+
+<Tip>
+  Most players only ever need to change the room code, and the easiest way to do that is to type it directly into the in-game input box. The launcher saves your entry to the config file automatically.
+</Tip>
+
+## [Supabase] settings
+
+Every Victor Launcher config entry lives under the `[Supabase]` section heading. The table below lists each key, its default value, and what it controls.
+
+| Key | Default | Description |
+|-----|---------|-------------|
+| `ProjectUrl` | `https://xziwdtzegzasllwnadih.supabase.co` | The Supabase project URL used for all room manifest lookups. Change this only if you are self-hosting Victor Launcher's backend. |
+| `AnonKey` | *(bundled default)* | The Supabase anonymous key that authenticates requests to room endpoints. Change this if you are connecting to your own Supabase project. |
+| `ManifestRpc` | `room-manifest` | The name of the Supabase Edge Function that Victor Launcher calls to fetch a signed room manifest by code. |
+| `RoomCode` | *(empty)* | The room code pre-filled in the Download By Code input when you open the overlay. Victor Launcher writes here every time you type a code in-game. |
+| `ManifestSigningPublicKeyPem` | *(bundled RSA public key)* | The PEM-encoded RSA public key used to verify signed room manifests. Rotate this before deploying a self-hosted instance to the public. |
+
+### The RoomCode entry
+
+`RoomCode` is written back to the config file every time you type a code into the overlay's input field. This means the field is pre-populated the next time you open the game — no need to retype a code you used before.
+
+You can also pre-populate it by editing the config file directly when Among Us is not running. If you edit it while the game is running, click **Reload Config** in the overlay to pick up the new value without restarting Among Us.
+
+<Note>
+  **Reload Config** only re-reads `RoomCode`. Changes to other config entries — such as `ProjectUrl` or `AnonKey` — require a full Among Us restart to take effect.
+</Note>
+
+## State file (informational)
+
+Victor Launcher writes a second file after every install, enable, or disable operation:
+
+```
+BepInEx/config/victor-launcher-state.json
+```
+
+This file is a snapshot of what Victor Launcher last saw on disk. You can read it to audit your current mod state, but you do not need to edit it — Victor Launcher does not read it back. The actual source of truth is the file system itself.
+
+The file looks like this:
+
+```json
+{
+  "generatedAtUtc": "2025-01-01T12:00:00Z",
+  "active": ["MyMod.dll", "SubFolder/AnotherMod.dll"],
+  "disabled": ["OldMod.dll"],
+  "staged": ["mod-imports/NewMod.dll"]
+}
+```
+
+| Field | Contents |
+|-------|----------|
+| `generatedAtUtc` | UTC timestamp of the last write |
+| `active` | Relative paths of DLLs currently in `BepInEx/plugins/` |
+| `disabled` | Relative paths of DLLs currently in `BepInEx/plugins-disabled/` |
+| `staged` | Relative paths of DLLs currently in `BepInEx/mod-imports/` |
+
+<Note>
+  The state file is informational only. Victor Launcher writes it but never reads it back. If the file is missing or out of date, Victor Launcher re-scans the file system directly — no action required on your part.
+</Note>
+
+## Restoring defaults
+
+If you accidentally corrupt the config file or want to start fresh, delete `BepInEx/config/com.tate.amongus.starterplugin.cfg` and relaunch Among Us. BepInEx regenerates the file with all default values on the next startup.

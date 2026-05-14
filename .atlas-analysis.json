@@ -1,0 +1,60 @@
+{
+  "projectType": "general",
+  "projectName": "Victor Launcher",
+  "projectDescription": "An in-game BepInEx mod manager for Among Us that lets players install, enable, disable, and share DLL plugins without manually moving files.",
+  "theme": "almond",
+  "primaryColor": "#2880EE",
+  "lightColor": null,
+  "darkColor": null,
+  "navigation": {
+    "groups": [
+      {
+        "group": "Get Started",
+        "pages": [
+          "introduction",
+          "installation",
+          "quickstart"
+        ]
+      },
+      {
+        "group": "Using Victor Launcher",
+        "pages": [
+          "managing-mods",
+          "shared-packs",
+          "skins"
+        ]
+      },
+      {
+        "group": "Configuration & Troubleshooting",
+        "pages": [
+          "configuration",
+          "troubleshooting"
+        ]
+      }
+    ]
+  },
+  "keyFeatures": [
+    "In-game mod manager accessible via F7 hotkey",
+    "Install DLL mods through a native Windows file picker",
+    "Enable and disable mods individually or by group without restarting",
+    "Shared room-code pack downloads so hosts can distribute mod sets to players",
+    "Signed manifest verification with RSA/SHA-256 for secure pack distribution",
+    "VSK skin support for customizing the launcher UI appearance",
+    "Automatic state snapshots tracking active, disabled, and queued mods",
+    "Automatic backup of overwritten DLLs before installation"
+  ],
+  "publicApiSurface": [
+    "ModFileService.GetMods() — returns all installed and disabled mod entries",
+    "ModFileService.GetStagedMods() — returns queued mods waiting to be installed",
+    "ModFileService.StageDll(sourcePath) — copies a DLL into the import queue",
+    "ModFileService.InstallStagedMod(sourcePath) — moves a queued DLL into the plugins folder",
+    "ModFileService.InstallStagedGroup(groupKey) — installs all DLLs in a queued folder",
+    "ModFileService.Enable(fullPath) / Disable(fullPath) — toggle a single mod",
+    "ModFileService.EnableGroup(groupKey) / DisableGroup(groupKey) — toggle an entire mod folder",
+    "ModFileService.DeleteDisabled(fullPath) — permanently remove a disabled DLL",
+    "SupabasePackService.DownloadPackAsync(roomCode, modFileService) — fetch and queue a shared mod pack by room code",
+    "InstallPlanner.CreatePlan(amongUsDirectory, manifest, installedManifestIds) — compute an install plan with dependency and conflict checks",
+    "GameProcessService.PickDllAndStage(modFileService) — open native file dialog and stage selected DLL",
+    "GameProcessService.CloseAmongUs() — gracefully quit the game via Unity Application.Quit()"
+  ]
+}

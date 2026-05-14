@@ -1,133 +1,49 @@
 ---
-title: "Introduction"
-description: "Welcome to the new home for your documentation"
-icon: 'star'
+title: "Victor Launcher: in-game mod manager for Among Us"
+description: "Victor Launcher is a BepInEx plugin that lets Among Us players install, enable, disable, and share DLL mods without ever leaving the game or moving files by hand."
 ---
 
-## Setting up
+Victor Launcher is an in-game mod manager for Among Us built on BepInEx. Press **F7** while in-game to open the launcher, then install, toggle, or share DLL plugins — all without leaving the game or dragging files into folders manually.
 
-Get your documentation site up and running in minutes.
-
-<Card
-  title="Start here"
-  icon="rocket"
-  href="/quickstart"
-  horizontal
->
-  Follow our three step quickstart guide.
-</Card>
-
-## Make it yours
-
-Design a docs site that looks great and empowers your users.
-
-<Columns cols={2}>
-  <Card
-    title="Edit locally"
-    icon="pen-to-square"
-    href="/development"
-  >
-    Edit your docs locally and preview them in real time.
+<CardGroup cols={2}>
+  <Card title="Installation" icon="download" href="/installation">
+    Download the latest release and drop it into your BepInEx plugins folder to get started.
   </Card>
-  <Card
-    title="Customize your site"
-    icon="palette"
-    href="/essentials/settings"
-  >
-    Customize the design and colors of your site to match your brand.
+  <Card title="Quickstart" icon="rocket" href="/quickstart">
+    Go from zero to your first mod installed in a few minutes.
   </Card>
-    <Card
-    title="Set up navigation"
-    icon="map"
-    href="/essentials/navigation"
-  >
-    Organize your docs to help users find what they need and succeed with your product.
+  <Card title="Managing mods" icon="sliders" href="/managing-mods">
+    Install, enable, disable, and delete individual mods or entire mod folders.
   </Card>
-  <Card
-    title="API documentation"
-    icon="terminal"
-    href="/api-reference/introduction"
-  >
-    Auto-generate API documentation from OpenAPI specifications.
+  <Card title="Shared packs" icon="share-nodes" href="/shared-packs">
+    Download a host's full mod pack by entering a room code — no file sharing required.
   </Card>
-</Columns>
+</CardGroup>
 
-## Create beautiful pages
+## What Victor Launcher does
 
-Everything you need to create world-class documentation.
+Victor Launcher removes the friction of manual mod management. Instead of dragging DLL files in and out of game folders, you control everything from an overlay that runs inside Among Us.
 
-<Columns cols={2}>
-  <Card
-    title="Write with MDX"
-    icon="pen-fancy"
-    href="/essentials/markdown"
-  >
-    Use MDX to style your docs pages.
-  </Card>
-  <Card
-    title="Code samples"
-    icon="code"
-    href="/essentials/code"
-  >
-    Add sample code to demonstrate how to use your product.
-  </Card>
-  <Card
-    title="Images"
-    icon="image"
-    href="/essentials/images"
-  >
-    Display images and other media.
-  </Card>
-  <Card
-    title="Reusable snippets"
-    icon="recycle"
-    href="/essentials/reusable-snippets"
-  >
-    Write once and reuse across your docs.
-  </Card>
-</Columns>
+<Steps>
+  <Step title="Install Victor Launcher">
+    Place the Victor Launcher DLL in `BepInEx/plugins/` and launch Among Us.
+  </Step>
+  <Step title="Open the launcher in-game">
+    Press **F7** at any time to show or hide the mod manager overlay.
+  </Step>
+  <Step title="Add your mods">
+    Click **Pick DLL** to select a mod file from your computer, or enter a room code to download a shared mod pack.
+  </Step>
+  <Step title="Install and restart">
+    Install queued mods from the launcher. When prompted, restart Among Us to load the new plugins.
+  </Step>
+</Steps>
 
-## Make your content agent ready
-
-Make your docs work for humans and AI agents alike.
-
-<Columns cols={2}>
-  <Card
-    title="Prompt component"
-    icon="robot"
-    href="/agent-ready/prompt"
-  >
-    Embed shareable AI prompts readers can copy or open in Cursor.
+<CardGroup cols={2}>
+  <Card title="Skins" icon="palette" href="/skins">
+    Customize the launcher's appearance with VSK skin files.
   </Card>
-  <Card
-    title="Visibility"
-    icon="eye"
-    href="/agent-ready/visibility"
-  >
-    Show different content to humans and agents reading your docs.
+  <Card title="Configuration" icon="gear" href="/configuration">
+    Adjust BepInEx config entries to point at a custom Supabase backend or room endpoint.
   </Card>
-  <Card
-    title="Contextual menu"
-    icon="bolt"
-    href="/agent-ready/contextual"
-  >
-    Give readers one-click access to Claude, ChatGPT, Cursor, and more.
-  </Card>
-  <Card
-    title="AI coding tools"
-    icon="wand-magic-sparkles"
-    href="/ai-tools/claude-code"
-  >
-    Set up Claude Code, Cursor, or Windsurf with Mintlify's skill.
-  </Card>
-</Columns>
-
-## Need inspiration?
-
-<Card
-  title="See complete examples"
-  icon="stars"
-  href="https://mintlify.com/customers"
->
-  Browse our showcase of exceptional documentation sites.
-</Card>
+</CardGroup>

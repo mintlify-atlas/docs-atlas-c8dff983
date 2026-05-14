@@ -1,0 +1,78 @@
+---
+title: 'Installing Victor Launcher into Your Among Us BepInEx Setup'
+description: 'Step-by-step guide to placing the Victor Launcher DLL into BepInEx/plugins/ and verifying the overlay opens correctly in Among Us.'
+---
+
+Installing Victor Launcher takes about two minutes. You drop a single DLL into your BepInEx plugins folder, launch the game, and press **F7** to confirm everything is working. The steps below walk you through the full process, including what Victor Launcher creates automatically on its first run.
+
+## Prerequisites
+
+Before you begin, make sure you have:
+
+- **Among Us** installed via Steam or itch.io.
+- **BepInEx** installed and working. If you have not set up BepInEx yet, follow the [BepInEx installation guide](https://docs.bepinex.dev/articles/user_guide/installation/index.html) before continuing. You can verify BepInEx is active by checking that a `BepInEx/` folder exists inside your Among Us directory and that the game launches without errors.
+
+## Installation steps
+
+<Steps>
+  <Step title="Download the latest release">
+    Go to the [Victor Launcher GitHub releases page](https://github.com/AteasVictor/Victor-Launcher/releases) and download the latest release asset. The file is named `AmongUsPlugin.dll`.
+  </Step>
+
+  <Step title="Locate your Among Us folder">
+    Find the root folder of your Among Us installation. If you installed through Steam, the default path is:
+
+    ```text
+    C:\Program Files (x86)\Steam\steamapps\common\Among Us
+    ```
+
+    You can also right-click Among Us in Steam, choose **Manage → Browse local files**, and Steam will open the folder for you.
+  </Step>
+
+  <Step title="Place the DLL in the plugins folder">
+    Copy `AmongUsPlugin.dll` into the following path inside your Among Us folder:
+
+    ```text
+    <Among Us folder>\BepInEx\plugins\
+    ```
+
+    The full path on a typical Steam installation looks like:
+
+    ```text
+    C:\Program Files (x86)\Steam\steamapps\common\Among Us\BepInEx\plugins\AmongUsPlugin.dll
+    ```
+
+    Do not place the file in any subfolder inside `plugins/` — it must sit directly in the `plugins/` directory itself.
+  </Step>
+
+  <Step title="Launch Among Us">
+    Start Among Us normally. BepInEx will detect `AmongUsPlugin.dll` and load Victor Launcher during startup. You do not need to do anything special at the launcher or title screen.
+  </Step>
+
+  <Step title="Verify the overlay opens">
+    Once you are in the game (the main menu is sufficient), press **F7**. The Victor Launcher overlay should appear in the center of the screen, showing the title "Victor Launcher" and stat chips for **Installed** and **Ready To Install** counts. Press **F7** again to close it.
+
+    If the overlay does not appear, see the [Troubleshooting](/troubleshooting) page.
+  </Step>
+</Steps>
+
+## What gets created on first run
+
+The first time Victor Launcher loads, it automatically creates the following folders and files if they do not already exist:
+
+| Path | Purpose |
+|---|---|
+| `BepInEx/plugins-disabled/` | Holds mods you have disabled but not deleted |
+| `BepInEx/mod-imports/` | Staging area for mods queued for installation |
+| `BepInEx/victor-backups/` | Backup copies created before any destructive operation |
+| `BepInEx/config/victor-launcher-state.json` | Persists the launcher's internal state between sessions |
+
+You do not need to create any of these manually.
+
+<Note>
+  Victor Launcher cannot disable or uninstall itself while Among Us is running. If you want to remove Victor Launcher, close the game first and then delete `AmongUsPlugin.dll` from `BepInEx/plugins/`.
+</Note>
+
+<Warning>
+  Any change you make through the overlay — installing, enabling, or disabling a mod — does not take effect until you restart Among Us. Victor Launcher will display a restart prompt after each such action. If you skip the prompt and continue playing, your mod list on disk will differ from what is currently loaded in memory.
+</Warning>
